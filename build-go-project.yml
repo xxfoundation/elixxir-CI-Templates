@@ -1,0 +1,28 @@
+build:
+    stage: build
+    image: $DOCKER_IMAGE
+    except:
+        - tags
+    script:
+        # Setup project
+        - go mod vendor -v
+        - make version
+        - mkdir -p release
+
+        # Windows 
+        # - GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-w -s' -o release/client.win64 main.go
+        # - GOOS=windows GOARCH=386 CGO_ENABLED=0 go build -ldflags '-w -s' -o release/client.win32 main.go
+
+        # Linux
+        - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-w -s' -o release/client.linux64 main.go
+        - GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -ldflags '-w -s' -o release/client.linuxa64 main.go
+
+        # macOS
+        - GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags '-w -s' -o release/client.darwin64 main.go
+        - GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags '-w -s' -o release/client.darwina64 main.go
+
+        # This tends to be in Go project build jobs, but I don't want to globally enable it yet until I understand side effects better
+        - /upload-artifacts.sh release/
+    artifacts:
+        paths:
+            - release/
