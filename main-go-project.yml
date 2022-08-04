@@ -1,0 +1,20 @@
+# This file should include and define all very common parts of a Go project .gitlab-ci.yml project
+
+include: 
+  - 'https://git.xx.network/elixxir/ci-templates/-/raw/master/before_script-go-project.yml'
+  - 'https://git.xx.network/elixxir/ci-templates/-/raw/master/test-go-project.yml'
+  - 'https://git.xx.network/elixxir/ci-templates/-/raw/master/build-go-project.yml'
+
+stages:
+  - test
+  - build
+  - events
+
+trigger-integration:
+  stage: events
+  trigger:
+    project: elixxir/integration
+    branch: $CI_COMMIT_REF_NAME
+  only:
+    - master
+    - release
