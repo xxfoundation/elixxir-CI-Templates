@@ -22,7 +22,7 @@ build:
         - GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -ldflags '-w -s' -o release/client.darwina64 main.go
 
         # This tends to be in Go project build jobs, but I don't want to globally enable it yet until I understand side effects better
-        - /upload-artifacts.sh release/
+        #- /upload-artifacts.sh release/
     artifacts:
         paths:
             - release/
